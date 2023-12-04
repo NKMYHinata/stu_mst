@@ -6,11 +6,13 @@ import com.wdd.studentmanager.service.SelectedCourseService;
 import com.wdd.studentmanager.util.AjaxResult;
 import com.wdd.studentmanager.util.Const;
 import com.wdd.studentmanager.util.PageBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +27,18 @@ import java.util.Map;
 @RequestMapping("/selectedCourse")
 public class SelectedCourseController {
 
-    @Autowired
-    private SelectedCourseService selectedCourseService;
+    private final SelectedCourseService selectedCourseService;
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
+    public SelectedCourseController(SelectedCourseService selectedCourseService){
+        this.selectedCourseService=selectedCourseService;
+    }
+
+
+    // 选课常量
+    private static final int COURSE_ADD_SUCCESS = 1;
+    private static final int COURSE_FULL = 0;
+    private static final int COURSE_ALREADY_SELECTED = 2;
 
 
 
@@ -50,7 +62,7 @@ public class SelectedCourseController {
                                @RequestParam(value = "rows", defaultValue = "100")Integer rows,
                                @RequestParam(value = "teacherid", defaultValue = "0")String studentid,
                                @RequestParam(value = "teacherid", defaultValue = "0")String courseid ,String from,HttpSession session){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!studentid.equals("0"))  paramMap.put("studentId",studentid);
@@ -65,7 +77,7 @@ public class SelectedCourseController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;
@@ -83,24 +95,23 @@ public class SelectedCourseController {
         AjaxResult ajaxResult = new AjaxResult();
         try {
             int count = selectedCourseService.addSelectedCourse(selectedCourse);
-            if(count == 1){
+            if(count == COURSE_ADD_SUCCESS){
                 ajaxResult.setSuccess(true);
                 ajaxResult.setMessage("选课成功");
-            }else if(count == 0){
+            }else if(count == COURSE_FULL){
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("选课人数已满");
-            }else if(count == 2){
+            }else if(count == COURSE_ALREADY_SELECTED){
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("已选择这门课程");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Add Select Course", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统内部出错，请联系管理员!");
         }
         return ajaxResult;
     }
-
 
     /**
      * 删除选课信息
@@ -111,7 +122,6 @@ public class SelectedCourseController {
     @ResponseBody
     public AjaxResult deleteSelectedCourse(Integer id){
         AjaxResult ajaxResult = new AjaxResult();
-
         try {
             int count = selectedCourseService.deleteSelectedCourse(id);
             if(count > 0){
@@ -122,10 +132,8 @@ public class SelectedCourseController {
                 ajaxResult.setMessage("移除失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Delete Selected Course Error: ", e);
         }
         return ajaxResult;
     }
-
-
 }

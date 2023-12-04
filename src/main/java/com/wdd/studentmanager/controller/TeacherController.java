@@ -3,6 +3,8 @@ package com.wdd.studentmanager.controller;
 import com.wdd.studentmanager.domain.Teacher;
 import com.wdd.studentmanager.service.TeacherService;
 import com.wdd.studentmanager.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -29,8 +32,13 @@ import java.util.UUID;
 @RequestMapping("/teacher")
 public class TeacherController {
 
-    @Autowired
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
+    public TeacherController(TeacherService teacherService){
+        this.teacherService = teacherService;
+    }
 
 
     @RequestMapping("/teacher_list")
@@ -54,7 +62,7 @@ public class TeacherController {
                                  @RequestParam(value = "rows", defaultValue = "100")Integer rows,
                                  String teacherName,
                                  @RequestParam(value = "clazzid", defaultValue = "0")String clazzid, String from, HttpSession session){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!StringUtils.isEmpty(teacherName))  paramMap.put("username",teacherName);
@@ -71,7 +79,7 @@ public class TeacherController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;
@@ -93,9 +101,7 @@ public class TeacherController {
                 Teacher byId = teacherService.findById(id);
                 if(!byId.getPhoto().isEmpty()){
                     File file = new File(fileDir.getAbsolutePath() + File.separator + byId.getPhoto());
-                    if(file != null){
-                        file.delete();
-                    }
+                    file.delete();
                 }
             }
             int count = teacherService.deleteTeacher(data.getIds());
@@ -107,7 +113,7 @@ public class TeacherController {
                 ajaxResult.setMessage("删除失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Delete Teacher Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("删除失败");
         }
@@ -119,11 +125,10 @@ public class TeacherController {
      * @param files
      * @param teacher
      * @return
-     * @throws IOException
      */
     @RequestMapping("/addTeacher")
     @ResponseBody
-    public AjaxResult addTeacher(@RequestParam("file") MultipartFile[] files, Teacher teacher) throws IOException {
+    public AjaxResult addTeacher(@RequestParam("file") MultipartFile[] files, Teacher teacher) {
 
         AjaxResult ajaxResult = new AjaxResult();
         teacher.setSn(SnGenerateUtil.generateTeacherSn(teacher.getClazzId()));
@@ -133,22 +138,22 @@ public class TeacherController {
         for(MultipartFile fileImg : files){
 
             // 拿到文件名
-            String extName = fileImg.getOriginalFilename().substring(fileImg.getOriginalFilename().lastIndexOf("."));
+            String extName = Objects.requireNonNull(fileImg.getOriginalFilename()).substring(fileImg.getOriginalFilename().lastIndexOf("."));
             String uuidName = UUID.randomUUID().toString();
 
             try {
                 // 构建真实的文件路径
                 File newFile = new File(fileDir.getAbsolutePath() + File.separator +uuidName+ extName);
 
-                // 上传图片到 -》 “绝对路径”
+                // 上传图片到给定路径
                 fileImg.transferTo(newFile);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Add Teacher Error: ", e);
             }
             teacher.setPhoto(uuidName+extName);
         }
-        //保存学生信息到数据库
+        //保存教师信息到数据库
         try{
             int count = teacherService.addTeacher(teacher);
             if(count > 0){
@@ -159,9 +164,9 @@ public class TeacherController {
                 ajaxResult.setMessage("保存失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Insert Teacher Sql Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("保存失败");
+            ajaxResult.setMessage("保存错误");
         }
 
         ajaxResult.setSuccess(true);
@@ -189,7 +194,7 @@ public class TeacherController {
             try {
                 // 构建真实的文件路径
                 File newFile = new File(fileDir.getAbsolutePath() + File.separator +uuidName+ extName);
-                // 上传图片到 -》 “绝对路径”
+                // 上传图片到给定路径
                 fileImg.transferTo(newFile);
 
                 Teacher byId = teacherService.findById(teacher.getId());
@@ -199,7 +204,7 @@ public class TeacherController {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Update Teacher Picture Error: ", e);
             }
             teacher.setPhoto(uuidName+extName);
         }
@@ -214,9 +219,9 @@ public class TeacherController {
                 ajaxResult.setMessage("修改失败");
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error("Edit Teacher Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("修改失败");
+            ajaxResult.setMessage("修改错误");
         }
         return ajaxResult;
     }

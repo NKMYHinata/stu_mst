@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class Grade {
 	private Long id;
 	private String name;
-	private String remark;//��ע
+	private String remark;
 	public Long getId() {
 		return id;
 	}

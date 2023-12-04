@@ -25,7 +25,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public PageBean<Attendance> queryPage(Map<String, Object> paramMap) {
         PageBean<Attendance> pageBean = new PageBean<>((Integer) paramMap.get("pageno"),(Integer) paramMap.get("pagesize"));
-
+ 
         Integer startIndex = pageBean.getStartIndex();
         paramMap.put("startIndex",startIndex);
         List<Attendance> datas = attendanceMapper.queryList(paramMap);

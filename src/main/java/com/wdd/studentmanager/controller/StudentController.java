@@ -5,6 +5,8 @@ import com.wdd.studentmanager.service.ClazzService;
 import com.wdd.studentmanager.service.SelectedCourseService;
 import com.wdd.studentmanager.service.StudentService;
 import com.wdd.studentmanager.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -26,24 +28,30 @@ import java.util.*;
 @RequestMapping("/student")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private ClazzService clazzService;
-    @Autowired
-    private SelectedCourseService selectedCourseService;
+    private final StudentService studentService;
+    private final SelectedCourseService selectedCourseService;
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
+    public StudentController(StudentService studentService,
+                             ClazzService clazzService,
+                             SelectedCourseService selectedCourseService) {
+        this.studentService = studentService;
+        this.selectedCourseService = selectedCourseService;
+    }
 
     /**
      * 跳转学生列表页面
+     *
      * @return
      */
     @GetMapping("/student_list")
-    public String studentList(){
+    public String studentList() {
         return "/student/studentList";
     }
 
     /**
      * 异步加载学生列表
+     *
      * @param page
      * @param rows
      * @param studentName
@@ -54,75 +62,76 @@ public class StudentController {
      */
     @RequestMapping("/getStudentList")
     @ResponseBody
-    public Object getStudentList(@RequestParam(value = "page", defaultValue = "1")Integer page,
-                                 @RequestParam(value = "rows", defaultValue = "100")Integer rows,
+    public Object getStudentList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                 @RequestParam(value = "rows", defaultValue = "100") Integer rows,
                                  String studentName,
-                                 @RequestParam(value = "clazzid", defaultValue = "0")String clazzid, String from, HttpSession session){
-        Map<String,Object> paramMap = new HashMap();
-        paramMap.put("pageno",page);
-        paramMap.put("pagesize",rows);
-        if(!StringUtils.isEmpty(studentName))  paramMap.put("username",studentName);
-        if(!clazzid.equals("0"))  paramMap.put("clazzid",clazzid);
+                                 @RequestParam(value = "clazzid", defaultValue = "0") String clazzid, String from, HttpSession session) {
+        Map<String, Object> paramMap = new HashMap();
+        paramMap.put("pageno", page);
+        paramMap.put("pagesize", rows);
+        if (!StringUtils.isEmpty(studentName)) paramMap.put("username", studentName);
+        if (!clazzid.equals("0")) paramMap.put("clazzid", clazzid);
 
         //判断是老师还是学生权限
         Student student = (Student) session.getAttribute(Const.STUDENT);
-        if(!StringUtils.isEmpty(student)){
+        if (!StringUtils.isEmpty(student)) {
             //是学生权限，只能查询自己的信息
-            paramMap.put("studentid",student.getId());
+            paramMap.put("studentid", student.getId());
         }
 
         PageBean<Student> pageBean = studentService.queryPage(paramMap);
-        if(!StringUtils.isEmpty(from) && from.equals("combox")){
+        if (!StringUtils.isEmpty(from) && from.equals("combox")) {
             return pageBean.getDatas();
-        }else{
-            Map<String,Object> result = new HashMap();
-            result.put("total",pageBean.getTotalsize());
-            result.put("rows",pageBean.getDatas());
+        } else {
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", pageBean.getTotalsize());
+            result.put("rows", pageBean.getDatas());
             return result;
         }
     }
 
     /**
      * 删除学生
+     *
      * @param data
      * @return
      */
     @PostMapping("/deleteStudent")
     @ResponseBody
-    public AjaxResult deleteStudent(Data data){
+    public AjaxResult deleteStudent(Data data) {
         AjaxResult ajaxResult = new AjaxResult();
         try {
             List<Integer> ids = data.getIds();
             Iterator<Integer> iterator = ids.iterator();
-            while (iterator.hasNext()){  //判断是否存在课程关联学生
-                if(!selectedCourseService.isStudentId(iterator.next())){
+            while (iterator.hasNext()) {  //判断是否存在课程关联学生
+                if (!selectedCourseService.isStudentId(iterator.next())) {
                     ajaxResult.setSuccess(false);
                     ajaxResult.setMessage("无法删除,存在课程关联学生");
                     return ajaxResult;
                 }
             }
             File fileDir = UploadUtil.getImgDirFile();
-            for(Integer id : ids){
+            for (Integer id : ids) {
                 Student byId = studentService.findById(id);
-                if(!byId.getPhoto().isEmpty()){
+                if (!byId.getPhoto().isEmpty()) {
                     File file = new File(fileDir.getAbsolutePath() + File.separator + byId.getPhoto());
-                    if(file != null){
+                    if (file != null) {
                         file.delete();
                     }
                 }
             }
             int count = studentService.deleteStudent(ids);
-            if(count > 0){
+            if (count > 0) {
                 ajaxResult.setSuccess(true);
                 ajaxResult.setMessage("全部删除成功");
 
-            }else{
+            } else {
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("删除失败");
             }
 
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Delete Student: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("删除失败");
         }
@@ -132,6 +141,7 @@ public class StudentController {
 
     /**
      * 添加学生
+     *
      * @param files
      * @param student
      * @return
@@ -139,14 +149,14 @@ public class StudentController {
      */
     @RequestMapping("/addStudent")
     @ResponseBody
-    public AjaxResult addStudent(@RequestParam("file") MultipartFile[] files,Student student) throws IOException {
+    public AjaxResult addStudent(@RequestParam("file") MultipartFile[] files, Student student) throws IOException {
 
         AjaxResult ajaxResult = new AjaxResult();
         student.setSn(SnGenerateUtil.generateSn(student.getClazzId()));
 
         // 存放上传图片的文件夹
         File fileDir = UploadUtil.getImgDirFile();
-        for(MultipartFile fileImg : files){
+        for (MultipartFile fileImg : files) {
 
             // 拿到文件名
             String extName = fileImg.getOriginalFilename().substring(fileImg.getOriginalFilename().lastIndexOf("."));
@@ -154,7 +164,7 @@ public class StudentController {
 
             try {
                 // 构建真实的文件路径
-                File newFile = new File(fileDir.getAbsolutePath() + File.separator +uuidName+ extName);
+                File newFile = new File(fileDir.getAbsolutePath() + File.separator + uuidName + extName);
 
                 // 上传图片到 -》 “绝对路径”
                 fileImg.transferTo(newFile);
@@ -162,19 +172,19 @@ public class StudentController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            student.setPhoto(uuidName+extName);
+            student.setPhoto(uuidName + extName);
         }
         //保存学生信息到数据库
-        try{
+        try {
             int count = studentService.addStudent(student);
-            if(count > 0){
+            if (count > 0) {
                 ajaxResult.setSuccess(true);
                 ajaxResult.setMessage("保存成功");
-            }else{
+            } else {
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("保存失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("保存失败");
@@ -186,21 +196,22 @@ public class StudentController {
 
     /**
      * 修改学生信息
+     *
      * @param files
      * @param student
      * @return
      */
     @PostMapping("/editStudent")
     @ResponseBody
-    public AjaxResult editStudent(@RequestParam("file") MultipartFile[] files,Student student){
+    public AjaxResult editStudent(@RequestParam("file") MultipartFile[] files, Student student) {
         AjaxResult ajaxResult = new AjaxResult();
 
         // 存放上传图片的文件夹
         File fileDir = UploadUtil.getImgDirFile();
-        for(MultipartFile fileImg : files){
+        for (MultipartFile fileImg : files) {
 
             String name = fileImg.getOriginalFilename();
-            if(name.equals("")){
+            if (name.equals("")) {
                 break;
             }
 
@@ -210,35 +221,35 @@ public class StudentController {
 
             try {
                 // 构建真实的文件路径
-                File newFile = new File(fileDir.getAbsolutePath() + File.separator +uuidName+ extName);
+                File newFile = new File(fileDir.getAbsolutePath() + File.separator + uuidName + extName);
                 // 上传图片到 -》 “绝对路径”
                 fileImg.transferTo(newFile);
 
                 Student byId = studentService.findById(student.getId());
                 File file = new File(fileDir.getAbsolutePath() + File.separator + byId.getPhoto());
-                if(file != null){
+                if (file != null) {
                     file.delete();
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            student.setPhoto(uuidName+extName);
+            student.setPhoto(uuidName + extName);
         }
 
-        try{
+        try {
             int count = studentService.editStudent(student);
-            if(count > 0){
+            if (count > 0) {
                 ajaxResult.setSuccess(true);
                 ajaxResult.setMessage("修改成功");
-            }else{
+            } else {
                 ajaxResult.setSuccess(false);
                 ajaxResult.setMessage("修改失败");
             }
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Edit Student Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("修改失败");
+            ajaxResult.setMessage("修改错误，请联系管理员");
         }
         return ajaxResult;
     }

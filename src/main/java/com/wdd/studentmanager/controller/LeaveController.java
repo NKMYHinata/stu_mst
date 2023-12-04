@@ -24,9 +24,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
+    private final LeaveService leaveService;
+    public LeaveController(LeaveService leaveService) {
+        this.leaveService = leaveService;
+    }
 
-    @Autowired
-    private LeaveService leaveService;
 
     @RequestMapping("leave_list")
     public String leaveList(){

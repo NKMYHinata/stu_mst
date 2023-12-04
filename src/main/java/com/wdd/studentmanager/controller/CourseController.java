@@ -23,8 +23,11 @@ import java.util.Map;
 @RequestMapping("/course")
 public class CourseController {
 
-    @Autowired
-    private CourseService courseService;
+    private final CourseService courseService;
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
+    }
+
 
     @GetMapping("/course_list")
     public String courseList(){
@@ -55,7 +58,7 @@ public class CourseController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;

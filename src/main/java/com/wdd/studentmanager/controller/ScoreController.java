@@ -41,14 +41,17 @@ import java.util.Map;
 @RequestMapping("/score")
 public class ScoreController {
 
-    @Autowired
-    private ScoreService scoreService;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private CourseService courseService;
-    @Autowired
-    private SelectedCourseService selectedCourseService;
+    private final ScoreService scoreService;
+    private final StudentService studentService;
+    private final CourseService courseService;
+
+    public ScoreController(ScoreService scoreService, StudentService studentService,
+                           CourseService courseService, SelectedCourseService selectedCourseService) {
+        this.scoreService = scoreService;
+        this.studentService = studentService;
+        this.courseService = courseService;
+    }
+
 
 
     @GetMapping("/score_list")

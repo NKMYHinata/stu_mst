@@ -11,6 +11,8 @@ import com.wdd.studentmanager.util.AjaxResult;
 import com.wdd.studentmanager.util.Const;
 import com.wdd.studentmanager.util.DateFormatUtil;
 import com.wdd.studentmanager.util.PageBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -29,12 +31,21 @@ import java.util.*;
 @RequestMapping("/attendance")
 public class AttendanceController {
 
-    @Autowired
-    private AttendanceService attendanceService;
-    @Autowired
-    private SelectedCourseService selectedCourseService;
-    @Autowired
-    private CourseService courseService;
+    private final AttendanceService attendanceService;
+    private final SelectedCourseService selectedCourseService;
+    private final CourseService courseService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
+    @Autowired // 如果只有一个构造器则这个注解在构造器上可以省略，比如此处
+    public AttendanceController(AttendanceService attendanceService,
+                                SelectedCourseService selectedCourseService,
+                                CourseService courseService) {
+        this.attendanceService = attendanceService;
+        this.selectedCourseService = selectedCourseService;
+        this.courseService = courseService;
+    }
+
 
     @GetMapping("/attendance_list")
     public String attendanceList(){
@@ -54,6 +65,7 @@ public class AttendanceController {
      * @param session
      * @return
      */
+
     @RequestMapping("/getAttendanceList")
     @ResponseBody
     public Object getAttendanceList(@RequestParam(value = "page", defaultValue = "1")Integer page,
@@ -61,7 +73,7 @@ public class AttendanceController {
                                  @RequestParam(value = "studentid", defaultValue = "0")String studentid,
                                  @RequestParam(value = "courseid", defaultValue = "0")String courseid,
                                  String type,String date, String from, HttpSession session){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!studentid.equals("0"))  paramMap.put("studentid",studentid);
@@ -79,7 +91,7 @@ public class AttendanceController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;
@@ -101,8 +113,7 @@ public class AttendanceController {
         for(SelectedCourse selectedCourse : selectedCourseList){
             ids.add(selectedCourse.getCourseId());
         }
-        List<Course> courseList = courseService.getCourseById(ids);
-        return courseList;
+        return courseService.getCourseById(ids);
     }
 
 
@@ -154,9 +165,9 @@ public class AttendanceController {
                 ajaxResult.setMessage("删除失败");
             }
         } catch (Exception e) {
+            logger.error("Delete Attendance Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统异常,请重试");
-            e.printStackTrace();
         }
         return ajaxResult;
     }

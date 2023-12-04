@@ -7,6 +7,8 @@ import com.wdd.studentmanager.util.AjaxResult;
 import com.wdd.studentmanager.util.Data;
 import com.wdd.studentmanager.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +27,16 @@ import java.util.Map;
 @Controller
 @RequestMapping("/clazz")
 public class ClazzController {
+    private final ClazzService clazzService;
+    private final StudentService studentService;
 
-    @Autowired
-    private ClazzService clazzService;
-    @Autowired
-    private StudentService studentService;
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
+    public ClazzController(ClazzService clazzService, StudentService studentService) {
+        this.clazzService = clazzService;
+        this.studentService = studentService;
+    }
+
 
     /**
      * 跳转班级页面
@@ -51,7 +58,7 @@ public class ClazzController {
     @ResponseBody
     public Object getClazzList(@RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "100")Integer rows, String clazzName, String from){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!StringUtils.isEmpty(clazzName))  paramMap.put("name",clazzName);
@@ -59,7 +66,7 @@ public class ClazzController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;
@@ -85,9 +92,9 @@ public class ClazzController {
                 ajaxResult.setMessage("添加失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Add Clazz Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("添加失败");
+            ajaxResult.setMessage("添加错误");
         }
         return ajaxResult;
     }
@@ -107,7 +114,7 @@ public class ClazzController {
             while (iterator.hasNext()){  //判断是否存在课程关联学生
                 if(!studentService.isStudentByClazzId(iterator.next())){
                     ajaxResult.setSuccess(false);
-                    ajaxResult.setMessage("无法删除,班级下存在学生");
+                    ajaxResult.setMessage("删除失败！该班级存在学生，请清除学生后再删除班级！");
                     return ajaxResult;
                 }
             }
@@ -120,9 +127,9 @@ public class ClazzController {
                 ajaxResult.setMessage("删除失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Delete Clazz Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("删除失败,该班级存在老师或学生");
+            ajaxResult.setMessage("删除失败！该班级存在老师或学生，请清除学生后再删除班级！");
         }
         return ajaxResult;
     }
@@ -146,9 +153,9 @@ public class ClazzController {
                 ajaxResult.setMessage("修改失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Edit Clazz Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("修改失败");
+            ajaxResult.setMessage("修改错误");
         }
         return ajaxResult;
     }
