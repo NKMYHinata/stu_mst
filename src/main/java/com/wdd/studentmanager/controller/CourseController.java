@@ -18,8 +18,8 @@ import java.util.Map;
 /**
  * @Classname CourseController
  * @Description None
- * @Date 2019/6/29 20:02
- * @Created by WDD
+ * @Date 2023/11/29 20:02
+ * @Created
  */
 @Controller
 @RequestMapping("/course")

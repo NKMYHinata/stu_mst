@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示学生考勤信息
  * @Classname Attendance
  * @Description 考勤实体类
- * @Date 2019/7/1 11:52
- * @Created by WDD
+ * @Date 2023/12/1 11:52
+ * @Created
  */
 public class Attendance {
     private Integer id; // 考勤记录的唯一标识

@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * @Classname TeacherService
  * @Description None
- * @Date 2019/6/28 18:56
- * @Created by WDD
+ * @Date 2023/11/28 18:56
+ * @Created
  */
 public interface TeacherService {
     PageBean<Teacher> queryPage(Map<String, Object> paramMap);

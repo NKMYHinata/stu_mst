@@ -6,8 +6,8 @@ package com.wdd.studentmanager.util;
  *
  * @Classname SnGenerateUtil
  * @Description 用于随机生成学号的工具类
- * @Date 2019/6/27 20:17
- * @Created by WDD
+ * @Date 2023/11/27 20:17
+ * @Created
  */
 public class SnGenerateUtil {
 

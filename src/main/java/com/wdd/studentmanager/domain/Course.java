@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示课程的相关信息
  * @Classname Course
  * @Description None
- * @Date 2019/6/29 20:06
- * @Created by WDD
+ * @Date 2023/11/29 20:06
+ * @Created
  */
 public class Course {
     private int id; // 课程ID

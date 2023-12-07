@@ -8,8 +8,8 @@ import java.util.Date;
  *
  * @Classname DateFormatUtil
  * @Description 日期格式化工具类
- * @Date 2019/7/2 13:22
- * @Created by WDD
+ * @Date 2023/12/2 13:22
+ * @Created
  */
 public class DateFormatUtil {
 

@@ -10,8 +10,8 @@ import java.util.Map;
 /**
  * @Classname ScoreService
  * @Description None
- * @Date 2019/7/3 11:45
- * @Created by WDD
+ * @Date 2023/12/3 11:45
+ * @Created
  */
 public interface ScoreService {
     PageBean<Score> queryPage(Map<String, Object> paramMap);

@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * @Classname ScoreMapper
  * @Description None
- * @Date 2019/7/3 11:47
- * @Created by WDD
+ * @Date 2023/12/3 11:47
+ * @Created
  */
 public interface ScoreMapper {
     List<Score> queryList(Map<String, Object> paramMap);

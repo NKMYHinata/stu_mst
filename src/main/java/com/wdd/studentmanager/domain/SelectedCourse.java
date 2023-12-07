@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示学生的选课信息
  * @Classname SelectedCourse
  * @Description 选课信息实体类
- * @Date 2019/6/30 10:30
- * @Created by WDD
+ * @Date 2023/11/30 10:30
+ * @Created
  */
 public class SelectedCourse {
     private Integer id; // 选课信息的ID

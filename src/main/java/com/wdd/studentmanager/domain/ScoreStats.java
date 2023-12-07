@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示特定课程的成绩统计信息
  * @Classname ScoreStats
  * @Description 成绩统计
- * @Date 2019/7/4 13:30
- * @Created by WDD
+ * @Date 2023/12/4 13:30
+ * @Created
  */
 public class ScoreStats {
     private Double max_score; // 最高分

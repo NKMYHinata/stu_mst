@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * @Classname LeaveMapper
  * @Description None
- * @Date 2019/7/2 15:55
- * @Created by WDD
+ * @Date 2023/12/2 15:55
+ * @Created
  */
 public interface LeaveMapper {
     List<Leave> queryList(Map<String, Object> paramMap);

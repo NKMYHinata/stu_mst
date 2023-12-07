@@ -8,8 +8,8 @@ import java.io.File;
  *
  * @Classname UploadUtil
  * @Description 文件上传工具类
- * @Date 2019/6/27 20:06
- * @Created by WDD
+ * @Date 2023/11/27 20:06
+ * @Created
  */
 public class UploadUtil {
     // 项目根路径(static)下的目录。

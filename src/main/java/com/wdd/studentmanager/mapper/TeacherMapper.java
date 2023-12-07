@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * @Classname TeacherMapper
  * @Description None
- * @Date 2019/6/28 19:06
- * @Created by WDD
+ * @Date 2023/11/28 19:06
+ * @Created
  */
 public interface TeacherMapper {
     List<Teacher> queryList(Map<String, Object> paramMap);

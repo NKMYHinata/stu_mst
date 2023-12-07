@@ -20,8 +20,8 @@ import java.util.Map;
 /**
  * @Classname SelectedCourseController
  * @Description 选课信息控制器
- * @Date 2019/6/30 10:39
- * @Created by WDD
+ * @Date 2023/11/30 10:39
+ * @Created
  */
 @Controller
 @RequestMapping("/selectedCourse")

@@ -34,8 +34,8 @@ import java.util.Map;
 /**
  * @Classname ScoreController
  * @Description 成绩控制器
- * @Date 2019/7/3 11:38
- * @Created by WDD
+ * @Date 2023/12/3 11:38
+ * @Created
  */
 @Controller
 @RequestMapping("/score")

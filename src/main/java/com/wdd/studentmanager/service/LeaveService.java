@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * @Classname LeaveService
  * @Description None
- * @Date 2019/7/2 15:54
- * @Created by WDD
+ * @Date 2023/12/2 15:54
+ * @Created
  */
 public interface LeaveService {
     PageBean<Leave> queryPage(Map<String, Object> paramMap);

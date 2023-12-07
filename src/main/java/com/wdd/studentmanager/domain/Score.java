@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于封装学生的课程成绩
  * @Classname Score
  * @Description 成绩实体表
- * @Date 2019/7/3 10:22
- * @Created by WDD
+ * @Date 2023/12/3 10:22
+ * @Created
  */
 public class Score {
     private Integer id; // 成绩ID

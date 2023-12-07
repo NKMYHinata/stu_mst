@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示教师的基本信息
  * @Classname Teacher
  * @Description None
- * @Date 2019/6/28 18:55
- * @Created by WDD
+ * @Date 2023/11/28 18:55
+ * @Created
  */
 public class Teacher {
     private int id; // 教师ID

@@ -5,8 +5,8 @@ package com.wdd.studentmanager.domain;
  * 用于表示学生的请假信息
  * @Classname Leave
  * @Description 请假表实体类
- * @Date 2019/7/2 13:57
- * @Created by WDD
+ * @Date 2023/12/2 13:57
+ * @Created
  */
 public class Leave {
     public static final int LEAVE_STATUS_WAIT = 0; // 等待审核状态
