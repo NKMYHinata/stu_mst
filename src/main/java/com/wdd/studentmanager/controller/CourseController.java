@@ -5,6 +5,8 @@ import com.wdd.studentmanager.service.CourseService;
 import com.wdd.studentmanager.util.AjaxResult;
 import com.wdd.studentmanager.util.Data;
 import com.wdd.studentmanager.util.PageBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,9 @@ import java.util.Map;
 public class CourseController {
 
     private final CourseService courseService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
@@ -49,7 +54,7 @@ public class CourseController {
                                @RequestParam(value = "rows", defaultValue = "100")Integer rows,
                                String name,
                                @RequestParam(value = "teacherid", defaultValue = "0")String teacherid ,String from){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!StringUtils.isEmpty(name))  paramMap.put("name",name);
@@ -84,7 +89,7 @@ public class CourseController {
                 ajaxResult.setMessage("添加失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Add Course Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("添加失败");
         }
@@ -111,7 +116,7 @@ public class CourseController {
                 ajaxResult.setMessage("修改失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Edit Course Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("修改失败");
         }
@@ -133,7 +138,7 @@ public class CourseController {
                 ajaxResult.setMessage("删除失败");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Delete Course Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("删除失败,该班级存在老师或学生");
         }

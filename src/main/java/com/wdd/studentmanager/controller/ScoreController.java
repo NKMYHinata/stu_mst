@@ -331,23 +331,7 @@ public class ScoreController {
         if(searchType.equals("avg")){
             ScoreStats scoreStats = scoreService.getAvgStats(courseid);
 
-            List<Double> scoreList = new ArrayList<Double>();
-            scoreList.add(scoreStats.getMax_score());
-            scoreList.add(scoreStats.getMin_score());
-            scoreList.add(scoreStats.getAvg_score());
-
-            List<String> avgStringList = new ArrayList<String>();
-            avgStringList.add("最高分");
-            avgStringList.add("最低分");
-            avgStringList.add("平均分");
-
-            Map<String, Object> retMap = new HashMap<String, Object>();
-            retMap.put("courseName", scoreStats.getCourseName());
-            retMap.put("scoreList", scoreList);
-            retMap.put("avgList", avgStringList);
-            retMap.put("type", "success");
-
-            return retMap;
+            return getRetMap(scoreStats);
         }
 
         Score score = new Score();
@@ -376,29 +360,39 @@ public class ScoreController {
             double scoreValue = sc.getScore();//获取成绩
             if(scoreValue < 60){
                 numberList.set(0, numberList.get(0)+1);
-                continue;
-            }
-            if(scoreValue <= 70 && scoreValue >= 60){
+            }else if(scoreValue <= 70){
                 numberList.set(1, numberList.get(1)+1);
-                continue;
-            }
-            if(scoreValue <= 80 && scoreValue > 70){
+            }else if(scoreValue <= 80){
                 numberList.set(2, numberList.get(2)+1);
-                continue;
-            }
-            if(scoreValue <= 90 && scoreValue > 80){
+            }else if(scoreValue <= 90){
                 numberList.set(3, numberList.get(3)+1);
-                continue;
-            }
-            if(scoreValue <= 100 && scoreValue > 90){
+            }else if(scoreValue <= 100){
                 numberList.set(4, numberList.get(4)+1);
-                continue;
             }
         }
-        Map<String, Object> retMap = new HashMap<String, Object>();
+        Map<String, Object> retMap = new HashMap<>();
         retMap.put("courseName", courseName);
         retMap.put("numberList", numberList);
         retMap.put("rangeList", rangeStringList);
+        retMap.put("type", "success");
+        return retMap;
+    }
+
+    private static Map<String, Object> getRetMap(ScoreStats scoreStats) {
+        List<Double> scoreList = new ArrayList<>();
+        scoreList.add(scoreStats.getMax_score());
+        scoreList.add(scoreStats.getMin_score());
+        scoreList.add(scoreStats.getAvg_score());
+
+        List<String> avgStringList = new ArrayList<>();
+        avgStringList.add("最高分");
+        avgStringList.add("最低分");
+        avgStringList.add("平均分");
+
+        Map<String, Object> retMap = new HashMap<>();
+        retMap.put("courseName", scoreStats.getCourseName());
+        retMap.put("scoreList", scoreList);
+        retMap.put("avgList", avgStringList);
         retMap.put("type", "success");
         return retMap;
     }

@@ -2,26 +2,27 @@ package com.wdd.studentmanager.util;
 
 import java.util.List;
 
+/**
+ * 封装分页信息和数据
+ * 包含页码，页数据数量，数据列表，总页数，总条数
+ * 计算开始索引方法用于数据库分页查询
+ */
 public class PageBean<T> {
-    private Integer pageno;  //第几页
-    private Integer pagesize; //每页条数
-    private List<T> datas;
-    private Integer totalno; //总共几页
-    private Integer totalsize; //总的条数
+    private Integer pageno;    // 当前页码
+    private Integer pagesize;  // 每页显示的条目数
+    private List<T> datas;     // 当前页的数据列表
+    private Integer totalno;   // 总页数
+    private Integer totalsize; // 总条目数
 
+    /**
+     * 构造函数，初始化分页参数
+     *
+     * @param pageno   当前页码。小于等于0时默认为1
+     * @param pagesize 每页条数。小于等于0时默认为10
+     */
     public PageBean(Integer pageno, Integer pagesize) {
-        if(pageno<=0){
-            this.pageno = 1;
-        }else{
-            this.pageno = pageno;
-        }
-        if(pagesize<=0){
-            this.pagesize = 10;
-        }else{
-            this.pagesize = pagesize;
-        }
-        this.pageno = pageno;
-        this.pagesize = pagesize;
+        this.pageno = (pageno <= 0) ? 1 : pageno;
+        this.pagesize = (pagesize <= 0) ? 10 : pagesize;
     }
 
     public Integer getPageno() {
@@ -40,11 +41,11 @@ public class PageBean<T> {
         this.pagesize = pagesize;
     }
 
-    public List getDatas() {
+    public List<T> getDatas() {
         return datas;
     }
 
-    public void setDatas(List datas) {
+    public void setDatas(List<T> datas) {
         this.datas = datas;
     }
 
@@ -61,17 +62,17 @@ public class PageBean<T> {
     }
 
     public void setTotalsize(Integer totalsize) {
-        this.totalno = (totalsize%pagesize==0)?(totalsize/pagesize):(totalsize/pagesize+1);
         this.totalsize = totalsize;
     }
 
     /**
-     * 开始索引
+     * 查找分页查询的开始索引
+     *
+     * @return 开始位置索引
      */
-    public Integer getStartIndex(){
-        return (this.pageno-1)*this.pagesize;
+    public Integer getStartIndex() {
+        return (this.pageno - 1) * this.pagesize;
     }
-
 
     @Override
     public String toString() {

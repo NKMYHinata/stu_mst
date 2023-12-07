@@ -66,7 +66,7 @@ public class StudentController {
                                  @RequestParam(value = "rows", defaultValue = "100") Integer rows,
                                  String studentName,
                                  @RequestParam(value = "clazzid", defaultValue = "0") String clazzid, String from, HttpSession session) {
-        Map<String, Object> paramMap = new HashMap();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("pageno", page);
         paramMap.put("pagesize", rows);
         if (!StringUtils.isEmpty(studentName)) paramMap.put("username", studentName);
@@ -102,9 +102,8 @@ public class StudentController {
         AjaxResult ajaxResult = new AjaxResult();
         try {
             List<Integer> ids = data.getIds();
-            Iterator<Integer> iterator = ids.iterator();
-            while (iterator.hasNext()) {  //判断是否存在课程关联学生
-                if (!selectedCourseService.isStudentId(iterator.next())) {
+            for (Integer integer : ids) {  //判断是否存在课程关联学生
+                if (!selectedCourseService.isStudentId(integer)) {
                     ajaxResult.setSuccess(false);
                     ajaxResult.setMessage("无法删除,存在课程关联学生");
                     return ajaxResult;
@@ -170,7 +169,7 @@ public class StudentController {
                 fileImg.transferTo(newFile);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Add Student Img Error: ", e);
             }
             student.setPhoto(uuidName + extName);
         }
@@ -185,7 +184,7 @@ public class StudentController {
                 ajaxResult.setMessage("保存失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Add Student Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("保存失败");
         }
@@ -232,7 +231,7 @@ public class StudentController {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Edit Student Img Error: ", e);
             }
             student.setPhoto(uuidName + extName);
         }
@@ -249,7 +248,7 @@ public class StudentController {
         } catch (Exception e) {
             logger.error("Edit Student Error: ", e);
             ajaxResult.setSuccess(false);
-            ajaxResult.setMessage("修改错误，请联系管理员");
+            ajaxResult.setMessage("修改错误");
         }
         return ajaxResult;
     }

@@ -101,7 +101,9 @@ public class TeacherController {
                 Teacher byId = teacherService.findById(id);
                 if(!byId.getPhoto().isEmpty()){
                     File file = new File(fileDir.getAbsolutePath() + File.separator + byId.getPhoto());
-                    file.delete();
+                    if(file != null){
+                        file.delete();
+                    }
                 }
             }
             int count = teacherService.deleteTeacher(data.getIds());
@@ -202,7 +204,6 @@ public class TeacherController {
                 if(file != null){
                     file.delete();
                 }
-
             } catch (IOException e) {
                 logger.error("Update Teacher Picture Error: ", e);
             }

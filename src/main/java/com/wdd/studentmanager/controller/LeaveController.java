@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Classname LeaveController
@@ -25,6 +27,9 @@ import java.util.Map;
 @RequestMapping("/leave")
 public class LeaveController {
     private final LeaveService leaveService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SelectedCourseController.class);
+
     public LeaveController(LeaveService leaveService) {
         this.leaveService = leaveService;
     }
@@ -49,7 +54,7 @@ public class LeaveController {
                                @RequestParam(value = "rows", defaultValue = "100")Integer rows,
                                @RequestParam(value = "studentid", defaultValue = "0")String studentid,
                                String from){
-        Map<String,Object> paramMap = new HashMap();
+        Map<String,Object> paramMap = new HashMap<>();
         paramMap.put("pageno",page);
         paramMap.put("pagesize",rows);
         if(!studentid.equals("0"))  paramMap.put("studentId",studentid);
@@ -57,7 +62,7 @@ public class LeaveController {
         if(!StringUtils.isEmpty(from) && from.equals("combox")){
             return pageBean.getDatas();
         }else{
-            Map<String,Object> result = new HashMap();
+            Map<String,Object> result = new HashMap<>();
             result.put("total",pageBean.getTotalsize());
             result.put("rows",pageBean.getDatas());
             return result;
@@ -83,7 +88,7 @@ public class LeaveController {
                 ajaxResult.setMessage("添加失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Add Leave Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统异常，请重试");
         }
@@ -109,7 +114,7 @@ public class LeaveController {
                 ajaxResult.setMessage("修改失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Edit Leave Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统异常，请重试");
         }
@@ -135,7 +140,7 @@ public class LeaveController {
                 ajaxResult.setMessage("审批失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Check Leave Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统异常，请重试");
         }
@@ -162,12 +167,10 @@ public class LeaveController {
                 ajaxResult.setMessage("删除失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Delete Leave Error: ", e);
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("系统异常，请重试");
         }
         return ajaxResult;
     }
-
-
 }
