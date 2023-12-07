@@ -1,21 +1,23 @@
 package com.wdd.studentmanager.domain;
 
 /**
- * @Classname score
+ * 成绩实体类
+ * 用于封装学生的课程成绩
+ * @Classname Score
  * @Description 成绩实体表
  * @Date 2019/7/3 10:22
  * @Created by WDD
  */
 public class Score {
-    private Integer id;
-    private Integer studentId;
-    private Integer courseId;
-    private double score;
-    private String remark;
+    private Integer id; // 成绩ID
+    private Integer studentId; // 学生ID
+    private Integer courseId; // 课程ID
+    private double score; // 成绩分数
+    private String remark; // 成绩备注
 
-    //关联表
-    private String courseName;
-    private String studentName;
+    // 关联信息
+    private String courseName; // 课程名称
+    private String studentName; // 学生姓名
 
     public Integer getId() {
         return id;

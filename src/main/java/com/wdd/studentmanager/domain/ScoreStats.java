@@ -1,16 +1,18 @@
 package com.wdd.studentmanager.domain;
 
 /**
+ * 成绩统计实体类
+ * 用于表示特定课程的成绩统计信息
  * @Classname ScoreStats
  * @Description 成绩统计
  * @Date 2019/7/4 13:30
  * @Created by WDD
  */
 public class ScoreStats {
-    private Double max_score;
-    private Double avg_score;
-    private Double min_score;
-    private String courseName;//课程名称
+    private Double max_score; // 最高分
+    private Double avg_score; // 平均分
+    private Double min_score; // 最低分
+    private String courseName; // 课程名称
 
     public Double getMax_score() {
         return max_score;

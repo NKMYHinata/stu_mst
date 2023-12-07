@@ -1,15 +1,19 @@
 package com.wdd.studentmanager.domain;
 
+/**
+ * 学生实体类
+ * 用于表示学生的基本信息
+ */
 public class Student {
-	private int id;
-	private String sn;//学号
-	private String username;
-	private String password;
-	private int clazzId;
-	private String sex = "男";
-	private String mobile;
-	private String qq;
-	private String photo;//头像
+	private int id; // 学生ID
+	private String sn; // 学号
+	private String username; // 用户名
+	private String password; // 密码
+	private int clazzId; // 班级ID
+	private String sex = "男"; // 性别，默认为男
+	private String mobile; // 手机号码
+	private String qq; // QQ号码
+	private String photo; // 头像
 
 	public int getId() {
 		return id;

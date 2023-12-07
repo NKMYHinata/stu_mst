@@ -2,12 +2,15 @@ package com.wdd.studentmanager.domain;
 
 import org.springframework.stereotype.Component;
 
-
+/**
+ * 年级实体类
+ * 用于表示学生所属的年级信息
+ */
 @Component
 public class Grade {
-	private Long id;
-	private String name;
-	private String remark;
+	private Long id; // 年级ID
+	private String name; // 年级名称
+	private String remark; // 年级备注
 	public Long getId() {
 		return id;
 	}

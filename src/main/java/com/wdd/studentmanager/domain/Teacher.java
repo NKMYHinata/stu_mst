@@ -1,21 +1,23 @@
 package com.wdd.studentmanager.domain;
 
 /**
+ * 教师实体类
+ * 用于表示教师的基本信息
  * @Classname Teacher
  * @Description None
  * @Date 2019/6/28 18:55
  * @Created by WDD
  */
 public class Teacher {
-    private int id;
-    private String sn;//学号
-    private String username;
-    private String password;
-    private int clazzId;
-    private String sex = "男";
-    private String mobile;
-    private String qq;
-    private String photo;//头像
+    private int id; // 教师ID
+    private String sn; // 教师工号
+    private String username; // 用户名
+    private String password; // 密码
+    private int clazzId; // 所属班级ID
+    private String sex = "男"; // 性别，默认为男
+    private String mobile; // 手机号码
+    private String qq; // QQ号码
+    private String photo; // 头像
 
     public int getId() {
         return id;

@@ -2,11 +2,13 @@ package com.wdd.studentmanager.domain;
 
 /**
  * 用户实体类
+ * 用于表示系统用户的信息
  */
+
 public class Admin {
-	private Long id;
-	private String username;
-	private String password;
+	private Long id; // 用户的唯一标识
+	private String username; // 用户名
+	private String password; // 密码
 	public Long getId() {
 		return id;
 	}
@@ -25,5 +27,4 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
 }
