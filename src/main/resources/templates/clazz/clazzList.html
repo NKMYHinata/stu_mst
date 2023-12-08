@@ -10,7 +10,6 @@
     <script type="text/javascript" th:src="@{/easyui/jquery.easyui.min.js}"></script>
     <script type="text/javascript" th:src="@{/easyui/js/validateExtends.js}"></script>
     <script type="text/javascript" th:inline="javascript">
-        /*<![CDATA[*/
         $(function() {
             //datagrid初始化
             $('#dataList').datagrid({
@@ -20,7 +19,7 @@
                 collapsible: false,//是否可折叠的
                 fit: true,//自动大小
                 method: "post",
-                url:/*[[@{/clazz/getClazzList}]]*/,
+                url:,
                 idField:'id',
                 singleSelect: false,//是否单选
                 pagination: true,//分页控件
@@ -40,7 +39,7 @@
                 toolbar: "#toolbar"
             });
             //设置分页控件
-            var p = $('#dataList').datagrid('getPager');
+            let p = $('#dataList').datagrid('getPager');
             $(p).pagination({
                 pageSize: 10,//每页显示的记录条数，默认为10
                 pageList: [10,20,30,50,100],//可以设置每页记录条数的列表
@@ -54,11 +53,11 @@
             });
             //删除
             $("#delete").click(function(){
-                var selectAll = $("#dataList").datagrid("getSelections");
+                let selectAll = $("#dataList").datagrid("getSelections");
                 if(selectAll == null){
                     $.messager.alert("消息提醒", "请选择数据进行删除!", "warning");
                 } else{
-                    var jsonObj = {};
+                    let jsonObj = {};
                     $.each(selectAll,function(i,n){
                         jsonObj["ids["+i+"]"] = n.id;
                     });
@@ -66,7 +65,7 @@
                         if(r){
                             $.ajax({
                                 type: "post",
-                                url: /*[[@{/clazz/deleteClazz}]]*/,
+                                url: ,
                                 data: jsonObj,
                                 success: function(data){
                                     if(data.success){
@@ -84,8 +83,6 @@
 
                 }
             });
-
-
 
             //设置添加班级窗口
             $("#addDialog").dialog({
@@ -105,15 +102,13 @@
                         plain: true,
                         iconCls:'icon-add',
                         handler:function(){
-                            var validate = $("#addForm").form("validate");
+                            let validate = $("#addForm").form("validate");
                             if(!validate){
                                 $.messager.alert("消息提醒","请检查你输入的数据!","warning");
-                                return;
                             } else{
-                                //var gradeid = $("#add_gradeList").combobox("getValue");
                                 $.ajax({
                                     type: "post",
-                                    url: /*[[@{/clazz/addClazz}]]*/,
+                                    url: ,
                                     data: $("#addForm").serialize(),
                                     success: function(data){
                                         if(data.success){
@@ -123,13 +118,10 @@
                                             //清空原表格数据
                                             $("#add_name").textbox('setValue', "");
                                             $("#info").val("");
-                                            //重新刷新页面数据
-                                            //$('#gradeList').combobox("setValue", gradeid);
                                             $('#dataList').datagrid("reload");
 
                                         } else{
                                             $.messager.alert("消息提醒",data.message,"warning");
-                                            return;
                                         }
                                     }
                                 });
@@ -148,8 +140,7 @@
                     },
                 ]
             });
-
-
+            
             //搜索按钮监听事件
             $("#search-btn").click(function(){
                 $('#dataList').datagrid('load',{
@@ -159,7 +150,7 @@
 
             //修改按钮监听事件
             $("#edit-btn").click(function(){
-                var selectRow = $("#dataList").datagrid("getSelected");
+                let selectRow = $("#dataList").datagrid("getSelected");
                 //console.log(selectRow);
                 if(selectRow == null){
                     $.messager.alert("消息提醒", "请选择数据进行修改!", "warning");
@@ -186,14 +177,13 @@
                         plain: true,
                         iconCls:'icon-add',
                         handler:function(){
-                            var validate = $("#editForm").form("validate");
+                            let validate = $("#editForm").form("validate");
                             if(!validate){
                                 $.messager.alert("消息提醒","请检查你输入的数据!","warning");
-                                return;
                             } else{
                                 $.ajax({
                                     type: "post",
-                                    url:/*[[@{/clazz/editClazz}]]*/,
+                                    url:,
                                     data: $("#editForm").serialize(),
                                     success: function(data){
                                         if(data.success){
@@ -203,13 +193,10 @@
                                             //清空原表格数据
                                             $("#edit_name").textbox('setValue', "");
                                             $("#edit_info").val("");
-                                            //重新刷新页面数据
-                                            //$('#gradeList').combobox("setValue", gradeid);
                                             $('#dataList').datagrid("reload");
 
                                         } else{
                                             $.messager.alert("消息提醒",data.message,"warning");
-                                            return;
                                         }
                                     }
                                 });
@@ -228,7 +215,7 @@
                     },
                 ],
                 onBeforeOpen: function(){
-                    var selectRow = $("#dataList").datagrid("getSelected");
+                    let selectRow = $("#dataList").datagrid("getSelected");
                     //console.log(selectRow);
                     //设置值
                     $("#edit_name").textbox('setValue', selectRow.name);
