@@ -3,8 +3,6 @@ $(function(){
 	InitLeftMenu();
 	tabClose();
 	tabCloseEven();
-
-
 })
 
 //初始化左侧
@@ -135,7 +133,7 @@ function tabCloseEven()
 		$('#mm-tabcloseright').click();
 		$('#mm-tabcloseleft').click();
 	});
-	//关闭当前右侧的TAB
+	//关闭当前右侧的TAB6
 	$('#mm-tabcloseright').click(function(){
 		var nextall = $('.tabs-selected').nextAll();
 		if(nextall.length==0){

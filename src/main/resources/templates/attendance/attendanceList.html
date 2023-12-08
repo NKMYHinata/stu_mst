@@ -197,7 +197,6 @@
                                     }else{
                                         $.messager.alert("消息提醒",data.message,"warning");
                                         return;
-
                                     }
                                 }
                             });
@@ -214,7 +213,6 @@
                     },
                 ]
             });
-
             //下拉框通用属性
             $("#add_courseList,#courseList,#add_typeList").combobox({
                 width: "200",
@@ -234,8 +232,6 @@
                 editable: false, //不可编辑
                 method: "post",
             });
-
-
             //添加信息学生选择框
             $("#add_studentList").combobox({
                 url: [[@{/student/getStudentList(from=combox)}]],

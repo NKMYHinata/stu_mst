@@ -42,9 +42,9 @@ public class SystemController {
      * 跳转登录界面
      * @return
      */
-    @GetMapping("/login")
+    @GetMapping("/")
     public String login(){
-        return "/login";
+        System.out.println("访问到了get"); return "/login";
     }
 
     /**
@@ -53,9 +53,9 @@ public class SystemController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public AjaxResult submitlogin(String username, String password, String code, String type,
-                                  HttpSession session){
+    public AjaxResult submitlogin(String username, String password, String code, String type, HttpSession session){
         AjaxResult ajaxResult = new AjaxResult();
+        System.out.println("访问到了post~~~");
         if(StringUtils.isEmpty(username)){
             ajaxResult.setSuccess(false);
             ajaxResult.setMessage("请填写用户名");
