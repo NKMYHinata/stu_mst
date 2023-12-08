@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.wdd.studentmanager.mapper.CourseMapper">
 
+    <!-- 定义课程信息的结果映射 -->
     <resultMap type="com.wdd.studentmanager.domain.Course" id="CourseInfo">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
@@ -12,73 +14,80 @@
         <result column="info" property="info"/>
     </resultMap>
 
-    <select id="queryList" resultMap="CourseInfo" >
-        <!-- 根据条件查询 图书的所有信息 -->
-        SELECT *
-        from s_course
+    <!-- 查询课程列表 -->
+    <select id="queryList" resultMap="CourseInfo">
+        SELECT * FROM s_course
         <where>
-            <if test="name!=null"> and name LIKE concat("%",#{name},"%") </if>
-            <if test="teacherId!=null"> and teacher_id LIKE concat("%",#{teacherId},"%") </if>
+            <if test="name!=null"> AND name LIKE CONCAT("%", #{name}, "%") </if>
+            <if test="teacherId!=null"> AND teacher_id LIKE CONCAT("%", #{teacherId}, "%") </if>
         </where>
-        limit #{startIndex},#{pagesize}
+        LIMIT #{startIndex}, #{pagesize}
     </select>
 
-    <select id="queryCount" resultType="int" >
-        select count(*) from s_course
+    <!-- 查询课程数量 -->
+    <select id="queryCount" resultType="int">
+        SELECT count(*) FROM s_course
         <where>
-            <if test="name!=null"> and name LIKE concat("%",#{name},"%") </if>
-            <if test="teacherId!=null"> and teacher_id LIKE concat("%",#{teacherId},"%") </if>
+            <if test="name!=null"> AND name LIKE CONCAT("%", #{name}, "%") </if>
+            <if test="teacherId!=null"> AND teacher_id LIKE CONCAT("%", #{teacherId}, "%") </if>
         </where>
     </select>
 
+    <!-- 添加课程 -->
     <insert id="addCourse" parameterType="Course">
-        insert into s_course(name,teacher_id,course_date,max_num,info)
-        values(#{name},#{teacherId},#{courseDate},#{maxNum},#{info})
+        INSERT INTO s_course(name, teacher_id, course_date, max_num, info)
+        VALUES(#{name}, #{teacherId}, #{courseDate}, #{maxNum}, #{info})
     </insert>
 
+    <!-- 批量删除课程 -->
     <delete id="deleteCourse" parameterType="java.util.ArrayList">
-        delete from s_course
+        DELETE FROM s_course
         <where>
-            id in
+            id IN
             <foreach collection="list" open="(" close=")" separator="," item="id">
                 #{id}
             </foreach>
         </where>
     </delete>
 
+    <!-- 编辑课程信息 -->
     <update id="editCourse" parameterType="Course">
-        update s_course set name = #{name},teacher_id = #{teacherId},course_date = #{courseDate},max_num = #{maxNum},info = #{info} where id = #{id}
+        UPDATE s_course
+        SET name = #{name}, teacher_id = #{teacherId}, course_date = #{courseDate}, max_num = #{maxNum}, info = #{info}
+        WHERE id = #{id}
     </update>
 
+    <!-- 增加课程已选人数 -->
     <update id="addStudentNum" parameterType="int">
-         update s_course
-         set selected_num = (case
-            when selected_num = max_num then 50
-            when selected_num &lt; max_num then selected_num+1
-            end
-         )
-         where id = #{courseId}
+        UPDATE s_course
+        SET selected_num = CASE
+        WHEN selected_num = max_num THEN 50
+        WHEN selected_num < max_num THEN selected_num + 1
+        END
+        WHERE id = #{courseId}
     </update>
 
+    <!-- 减少课程已选人数 -->
     <update id="deleteStudentNum" parameterType="int">
-         update s_course
-         set selected_num = selected_num-1
-         where id = #{courseId}
+        UPDATE s_course
+        SET selected_num = selected_num - 1
+        WHERE id = #{courseId}
     </update>
 
+    <!-- 根据课程ID查询课程信息 -->
     <select id="getCourseById" parameterType="java.util.List" resultType="Course">
-        select *
-        from s_course
+        SELECT * FROM s_course
         <where>
-            id in
+            id IN
             <foreach collection="list" open="(" close=")" separator="," item="id">
                 #{id}
             </foreach>
         </where>
     </select>
 
+    <!-- 根据课程名称查询课程ID -->
     <select id="findByName" parameterType="java.lang.String" resultType="int">
-        select id from s_course where name = #{name}
+        SELECT id FROM s_course WHERE name = #{name}
     </select>
 
 </mapper>

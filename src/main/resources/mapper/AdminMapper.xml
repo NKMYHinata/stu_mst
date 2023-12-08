@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- MyBatis 映射器配置文件 -->
 <mapper namespace="com.wdd.studentmanager.mapper.AdminMapper">
+
+    <!-- 根据用户名和密码查询管理员信息 -->
     <select id="findByAdmin" parameterType="Admin" resultType="Admin">
-        select * from s_admin where username = #{username} and password = #{password}
+        SELECT *
+        FROM s_admin
+        WHERE username = #{username}
+          AND password = #{password}
     </select>
 
+    <!-- 根据管理员ID更新密码 -->
     <update id="editPswdByAdmin" parameterType="Admin">
-        update  s_admin set password = #{password} where id = #{id}
+        UPDATE s_admin
+        SET password = #{password}
+        WHERE id = #{id}
     </update>
 
 </mapper>

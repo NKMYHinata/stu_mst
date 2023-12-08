@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.wdd.studentmanager.mapper.LeaveMapper">
 
+    <!-- 定义学生请假信息的结果映射 -->
     <resultMap type="com.wdd.studentmanager.domain.Leave" id="LeaveInfo">
         <result column="id" property="id"/>
         <result column="student_id" property="studentId"/>
@@ -10,66 +12,42 @@
         <result column="remark" property="remark"/>
     </resultMap>
 
-    <select id="queryList" resultMap="LeaveInfo" >
-        <!-- 根据条件查询 图书的所有信息 -->
-        SELECT *
-        from s_leave
+    <!-- 查询请假列表 -->
+    <select id="queryList" resultMap="LeaveInfo">
+        SELECT * FROM s_leave
         <where>
-            <if test="studentId!=null"> and student_id = #{studentId} </if>
+            <if test="studentId!=null"> AND student_id = #{studentId} </if>
         </where>
-        limit #{startIndex},#{pagesize}
+        LIMIT #{startIndex}, #{pagesize}
     </select>
 
-    <select id="queryCount" resultType="int" >
-        select count(*) from s_leave
+    <!-- 查询请假数量 -->
+    <select id="queryCount" resultType="int">
+        SELECT count(*) FROM s_leave
         <where>
-            <if test="studentId!=null"> and student_id = #{studentId} </if>
+            <if test="studentId!=null"> AND student_id = #{studentId} </if>
         </where>
     </select>
 
+    <!-- 添加请假记录 -->
     <insert id="addLeave" parameterType="Leave">
-        insert into s_leave(student_id,info)
-        values(#{studentId},#{info})
+        INSERT INTO s_leave(student_id, info)
+        VALUES(#{studentId}, #{info})
     </insert>
 
+    <!-- 删除请假记录 -->
     <delete id="deleteLeave" parameterType="int">
-        delete from s_leave where id = #{id}
+        DELETE FROM s_leave WHERE id = #{id}
     </delete>
 
+    <!-- 编辑请假信息 -->
     <update id="editLeave" parameterType="Leave">
-        update s_leave set student_id = #{studentId},info = #{info} where id = #{id}
+        UPDATE s_leave SET student_id = #{studentId}, info = #{info} WHERE id = #{id}
     </update>
 
+    <!-- 审核请假 -->
     <update id="checkLeave" parameterType="Leave">
-        update s_leave set student_id = #{studentId},info = #{info},status = #{status},remark = #{remark} where id = #{id}
+        UPDATE s_leave SET student_id = #{studentId}, info = #{info}, status = #{status}, remark = #{remark} WHERE id = #{id}
     </update>
-
-<!--    <update id="addStudentNum" parameterType="int">-->
-<!--         update s_course-->
-<!--         set selected_num = (case-->
-<!--            when selected_num = max_num then 50-->
-<!--            when selected_num &lt; max_num then selected_num+1-->
-<!--            end-->
-<!--         )-->
-<!--         where id = #{courseId}-->
-<!--    </update>-->
-
-<!--    <update id="deleteStudentNum" parameterType="int">-->
-<!--         update s_course-->
-<!--         set selected_num = selected_num-1-->
-<!--         where id = #{courseId}-->
-<!--    </update>-->
-
-<!--    <select id="getCourseById" parameterType="java.util.List" resultType="Course">-->
-<!--        select *-->
-<!--        from s_course-->
-<!--        <where>-->
-<!--            id in-->
-<!--            <foreach collection="list" open="(" close=")" separator="," item="id">-->
-<!--                #{id}-->
-<!--            </foreach>-->
-<!--        </where>-->
-<!--    </select>-->
-
 
 </mapper>
