@@ -7,4 +7,5 @@ package com.wdd.studentmanager.mapper;
  * @Created
  */
 public interface GradeMapper {
+
 }
